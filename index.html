@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mallu Collection — Generador</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#111;color:#eee;min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .container{width:100%;max-width:420px;padding:16px}
+    .card{background:#1a1a1a;border-radius:16px;padding:24px;border:1px solid #333;box-shadow:0 4px 24px rgba(0,0,0,.6)}
+    h1{font-size:22px;color:#D32F2F;text-align:center;margin-bottom:4px}
+    .sub{text-align:center;color:#888;font-size:13px;margin-bottom:20px}
+    label{display:block;font-weight:600;font-size:13px;color:#ccc;margin-top:14px;margin-bottom:4px}
+    input,select,textarea{width:100%;padding:12px;background:#252525;border:1px solid #444;border-radius:10px;font-size:15px;color:#eee;transition:border .2s}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:#D32F2F}
+    input::placeholder{color:#666}
+    input[type=file]{padding:10px}
+    input[type=file]::file-selector-button{background:#D32F2F;color:#fff;border:none;padding:8px 16px;border-radius:8px;margin-right:8px;cursor:pointer;font-size:13px}
+    textarea{resize:vertical;min-height:60px}
+    button{width:100%;background:#D32F2F;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:20px;transition:background .2s,transform .1s}
+    button:hover{background:#b71c1c}
+    button:active{transform:scale(.98)}
+    button:disabled{background:#555;cursor:not-allowed;transform:none}
+    .opt{display:none;margin-top:6px;animation:fadeIn .2s}
+    .opt.show{display:block}
+    .result{display:none;text-align:center;padding:20px;animation:fadeIn .3s}
+    .result.show{display:block}
+    .result .icon{font-size:48px;margin-bottom:12px}
+    .result h2{font-size:18px;color:#4CAF50;margin-bottom:8px}
+    .result p{color:#aaa;font-size:14px;margin-bottom:16px}
+    .result a{display:inline-block;background:#333;color:#fff;padding:10px 24px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;transition:background .2s}
+    .result a:hover{background:#444}
+    .error{color:#f44336;font-size:13px;margin-top:8px;display:none}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    footer{text-align:center;margin-top:20px;font-size:11px;color:#555}
+    footer a{color:#888;text-decoration:none}
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card" id="formCard">
+    <h1>🎨 Mallu Templates</h1>
+    <p class="sub">Selecciona tipo y sube tu foto</p>
+
+    <form id="f" enctype="multipart/form-data">
+      <label>📸 Foto del Producto</label>
+      <input type="file" name="foto" accept="image/*" required>
+
+      <label>📋 Tipo de Plantilla</label>
+      <select name="template" id="tpl" required>
+        <option value="">Selecciona...</option>
+        <option value="novedad">🔥 Novedad / Lanzamiento</option>
+        <option value="oferta">💰 Oferta</option>
+        <option value="coleccion">📚 Colección</option>
+        <option value="anuncios">📢 Anuncios</option>
+      </select>
+
+      <div class="opt" id="opt-oferta">
+        <label>💸 Precio Anterior</label>
+        <input type="text" name="anterior" placeholder="$34.990">
+        <label>💰 Precio Oferta</label>
+        <input type="text" name="precio" placeholder="$24.990">
+      </div>
+
+      <div class="opt" id="opt-novedad">
+        <label>💰 Precio</label>
+        <input type="text" name="precio" placeholder="$24.990">
+      </div>
+
+      <div class="opt" id="opt-coleccion">
+        <label>🏷️ Título</label>
+        <input type="text" name="titulo" placeholder="COLECCIÓN">
+        <label>📦 Nombre Producto</label>
+        <input type="text" name="prod_name" placeholder="Volúmenes 1-13">
+        <label>💵 Precio</label>
+        <input type="text" name="prod_precio" placeholder="$149.990">
+      </div>
+
+      <div class="opt" id="opt-anuncios">
+        <label>📝 Descripción (para Copy IA)</label>
+        <textarea name="copy_detalles" placeholder="Describe el producto..."></textarea>
+      </div>
+
+      <button type="submit" id="btn">✨ Generar Template</button>
+      <div class="error" id="err"></div>
+    </form>
+  </div>
+
+  <div class="result" id="successBox">
+    <div class="icon">✅</div>
+    <h2>¡En proceso!</h2>
+    <p>Tu contenido se está generando y se enviará a Telegram en segundos.</p>
+    <a href="javascript:resetForm()">🔄 Generar otro</a>
+  </div>
+
+  <footer>
+    Mallu Collection Store · <a href="https://mallucollectionstore.com" target="_blank">Tienda</a>
+  </footer>
+</div>
+
+<script>
+  const SERVER = 'https://recommendation-founded-suit-corpus.trycloudflare.com';
+
+  document.getElementById('tpl').addEventListener('change', function(){
+    document.querySelectorAll('.opt').forEach(d => d.classList.remove('show'));
+    const map = { oferta:'opt-oferta', novedad:'opt-novedad', coleccion:'opt-coleccion', anuncios:'opt-anuncios' };
+    const sel = map[this.value];
+    if(sel) document.getElementById(sel).classList.add('show');
+  });
+
+  document.getElementById('f').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const btn = document.getElementById('btn');
+    const err = document.getElementById('err');
+    btn.disabled = true;
+    btn.textContent = '⏳ Subiendo...';
+    err.style.display = 'none';
+
+    try {
+      const fd = new FormData(this);
+      const resp = await fetch(SERVER + '/form', { method:'POST', body:fd });
+      if(!resp.ok) throw new Error('Error ' + resp.status);
+      
+      document.getElementById('formCard').style.display = 'none';
+      document.getElementById('successBox').classList.add('show');
+    } catch(ex) {
+      btn.disabled = false;
+      btn.textContent = '✨ Generar Template';
+      err.textContent = 'Error: ' + ex.message + '. Intenta de nuevo.';
+      err.style.display = 'block';
+    }
+  });
+
+  function resetForm(){
+    document.getElementById('f').reset();
+    document.getElementById('btn').disabled = false;
+    document.getElementById('btn').textContent = '✨ Generar Template';
+    document.getElementById('err').style.display = 'none';
+    document.querySelectorAll('.opt').forEach(d => d.classList.remove('show'));
+    document.getElementById('formCard').style.display = 'block';
+    document.getElementById('successBox').classList.remove('show');
+  }
+</script>
+</body>
+</html>
