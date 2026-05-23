@@ -2,105 +2,370 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mallu Collection — Generador</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Contenido Premium — Mallu Collection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@400;500;700;800&display=swap" rel="stylesheet">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#111;color:#eee;min-height:100vh;display:flex;align-items:center;justify-content:center}
-    .container{width:100%;max-width:420px;padding:16px}
-    .card{background:#1a1a1a;border-radius:16px;padding:24px;border:1px solid #333;box-shadow:0 4px 24px rgba(0,0,0,.6)}
-    h1{font-size:22px;color:#D32F2F;text-align:center;margin-bottom:4px}
-    .sub{text-align:center;color:#888;font-size:13px;margin-bottom:20px}
-    label{display:block;font-weight:600;font-size:13px;color:#ccc;margin-top:14px;margin-bottom:4px}
-    input,select,textarea{width:100%;padding:12px;background:#252525;border:1px solid #444;border-radius:10px;font-size:15px;color:#eee;transition:border .2s}
-    input:focus,select:focus,textarea:focus{outline:none;border-color:#D32F2F}
-    input::placeholder{color:#666}
-    input[type=file]{padding:10px}
-    input[type=file]::file-selector-button{background:#D32F2F;color:#fff;border:none;padding:8px 16px;border-radius:8px;margin-right:8px;cursor:pointer;font-size:13px}
-    textarea{resize:vertical;min-height:60px}
-    button{width:100%;background:#D32F2F;color:#fff;border:none;padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:20px;transition:background .2s,transform .1s}
-    button:hover{background:#b71c1c}
-    button:active{transform:scale(.98)}
-    button:disabled{background:#555;cursor:not-allowed;transform:none}
-    .opt{display:none;margin-top:6px;animation:fadeIn .2s}
-    .opt.show{display:block}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    footer{text-align:center;margin-top:20px;font-size:11px;color:#555}
-    footer a{color:#888;text-decoration:none}
+    :root {
+      --bg: #0e0d0c; --card: rgba(28,27,24,0.8);
+      --gold: #f5a623; --gold-glow: rgba(245,166,35,0.35);
+      --red: #d32f2f; --red-glow: rgba(211,47,47,0.35);
+      --text: #fff; --muted: #9a9a9a;
+      --border: rgba(255,255,255,0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text);
+      min-height: 100vh; overflow-x: hidden; display: flex; flex-direction: column;
+    }
+    .orb { position: fixed; border-radius: 50%; filter: blur(130px); pointer-events: none; opacity: 0.18; z-index: 0; }
+    .orb-gold { width: 500px; height: 500px; background: var(--gold); top: -150px; right: -100px; }
+    .orb-red  { width: 600px; height: 600px; background: var(--red); bottom: -200px; left: -120px; }
+    header {
+      position: relative; z-index: 10; padding: 20px 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      background: rgba(14,13,12,0.85); backdrop-filter: blur(12px);
+    }
+    .logo { font-family:'Outfit',sans-serif; font-weight:800; font-size:1.2rem;
+      background: linear-gradient(135deg,#fff 40%,var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .badge-header { font-size:0.78rem; padding:4px 12px; border-radius:20px;
+      background:rgba(211,47,47,0.15); border:1px solid var(--red); color:#fff; letter-spacing:1px; font-weight:600; }
+    main { position: relative; z-index: 1; max-width: 800px; margin: 0 auto;
+      padding: 40px 24px; display: flex; flex-direction: column; gap: 28px; width: 100%; }
+    .hero { text-align: center; animation: fadeUp .6s ease both; }
+    h1 { font-family:'Outfit',sans-serif; font-weight:800; font-size:2.2rem;
+      background:linear-gradient(135deg,#fff 55%,var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .hero p { color:var(--muted); margin-top:8px; font-size:1rem; }
+    .card { background: var(--card); border-radius: 24px; padding: 32px;
+      backdrop-filter: blur(18px); box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+      border: 1px solid var(--border); animation: fadeUp .8s ease both;
+      display: flex; flex-direction: column; gap: 24px; }
+    label { font-family:'Outfit',sans-serif; font-weight:600; font-size:0.95rem; color:#fff;
+      margin-bottom: 8px; display: block; letter-spacing:0.5px; }
+    .form-group { display: flex; flex-direction: column; }
+    .template-selector { display: grid; grid-template-columns: repeat(4,1fr); gap:12px; margin-bottom:8px; }
+    @media(max-width:600px) { .template-selector { grid-template-columns: repeat(2,1fr); } }
+    .template-option { background:rgba(255,255,255,0.03); border:1.5px solid rgba(255,255,255,0.08);
+      border-radius:16px; padding:16px 8px; text-align:center; cursor:pointer;
+      transition:all .3s cubic-bezier(0.165,0.84,0.44,1); display:flex;
+      flex-direction:column; align-items:center; gap:8px; }
+    .template-option:hover { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.15); transform:translateY(-2px); }
+    .template-option.selected { background:rgba(245,166,35,0.08); border-color:var(--gold); box-shadow:0 0 14px rgba(245,166,35,0.15); }
+    .template-icon { font-size:1.8rem; } .template-name { font-family:'Outfit',sans-serif; font-weight:700;
+      font-size:0.85rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; }
+    .template-option.selected .template-name { color:#fff; }
+    input[type="text"],select,textarea { width:100%; background:rgba(14,13,12,0.9);
+      border:1.5px solid rgba(255,255,255,0.07); border-radius:12px; color:#fff;
+      padding:14px 18px; font-family:'Inter',sans-serif; font-size:0.95rem;
+      outline:none; transition:all .25s ease; }
+    input[type="text"]:focus,select:focus,textarea:focus { border-color:var(--gold); box-shadow:0 0 12px rgba(245,166,35,0.15); }
+    .dynamic-section { display:none; border-left:2px solid var(--gold); padding-left:18px;
+      margin-top:4px; animation:slideDown .35s cubic-bezier(0.175,0.885,0.32,1.275) both; }
+    .dynamic-section.active { display:flex; flex-direction:column; gap:16px; }
+    .dropzone { border:2px dashed rgba(255,255,255,0.15); border-radius:16px; padding:24px;
+      text-align:center; cursor:pointer; background:rgba(255,255,255,0.01);
+      transition:all .3s ease; display:flex; flex-direction:column; align-items:center; gap:8px; position:relative; }
+    .dropzone:hover { border-color:var(--gold); background:rgba(245,166,35,0.02); }
+    .dropzone-icon { font-size:2.2rem; color:var(--muted); }
+    .dropzone-text { font-size:0.9rem; color:var(--muted); }
+    .dropzone-text span { color:var(--gold); font-weight:600; }
+    #file-preview { width:120px; height:120px; object-fit:contain; border-radius:12px;
+      display:none; border:1px solid rgba(255,255,255,0.08); background:#141310; padding:4px; }
+    .btn-submit { background:linear-gradient(135deg,var(--gold),#e08b1b); color:#000;
+      font-family:'Outfit',sans-serif; font-weight:800; font-size:1.05rem; padding:16px;
+      border-radius:14px; border:none; cursor:pointer; box-shadow:0 4px 18px var(--gold-glow);
+      transition:all .3s cubic-bezier(0.165,0.84,0.44,1); display:flex;
+      align-items:center; justify-content:center; gap:8px; margin-top:10px; width:100%; }
+    .btn-submit:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(245,166,35,0.55); }
+    .btn-submit:disabled { background:#555; box-shadow:none; cursor:not-allowed; transform:none; }
+    .loader-overlay { position:fixed; top:0;left:0;width:100vw;height:100vh;
+      background:rgba(14,13,12,0.95); z-index:1000; display:none; flex-direction:column;
+      align-items:center; justify-content:center; gap:24px; backdrop-filter:blur(8px); }
+    .loader-spinner { width:64px; height:64px; border:5px solid rgba(245,166,35,0.1);
+      border-left-color:var(--gold); border-radius:50%; animation:spin 1s linear infinite; }
+    .loader-title { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.4rem;
+      background:linear-gradient(135deg,#fff,var(--gold)); -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent; text-align:center; }
+    .loader-desc { color:var(--muted); font-size:0.92rem; text-align:center; max-width:320px; line-height:1.5; }
+    .success-overlay { position:fixed; top:0;left:0;width:100vw;height:100vh;
+      background:rgba(14,13,12,0.95); z-index:1000; display:none; flex-direction:column;
+      align-items:center; justify-content:center; gap:20px; backdrop-filter:blur(8px); text-align:center; }
+    .success-overlay.show { display:flex; }
+    .success-icon { font-size:4rem; }
+    .success-title { font-family:'Outfit',sans-serif; font-weight:700; font-size:1.6rem; color:var(--gold); }
+    .success-desc { color:var(--muted); font-size:1rem; max-width:320px; }
+    .btn-again { background:rgba(255,255,255,0.08); color:#fff; font-family:'Outfit',sans-serif;
+      font-weight:600; font-size:1rem; padding:14px 28px; border-radius:12px; border:1px solid var(--border);
+      cursor:pointer; transition:all .2s ease; }
+    .btn-again:hover { background:rgba(255,255,255,0.12); border-color:var(--gold); }
+    footer { text-align:center; color:var(--muted); font-size:0.82rem; padding:40px 24px;
+      border-top:1px solid rgba(255,255,255,0.05); margin-top:auto; position:relative; z-index:1; }
+    footer a { color:var(--gold); text-decoration:none; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes slideDown { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes spin { to{transform:rotate(360deg)} }
   </style>
 </head>
 <body>
-<div class="container">
-  <div class="card">
-    <h1>🎨 Mallu Templates</h1>
-    <p class="sub">Selecciona tipo y sube tu foto</p>
+  <div class="orb orb-gold"></div>
+  <div class="orb orb-red"></div>
 
-    <form id="f" method="POST" enctype="multipart/form-data">
-      <label>📸 Foto del Producto</label>
-      <input type="file" name="foto" accept="image/*" required>
+  <header>
+    <span class="logo">MALLU COLLECTION STORE</span>
+    <span class="badge-header">Suite de Marketing</span>
+  </header>
 
-      <label>📋 Tipo de Plantilla</label>
-      <select name="template" id="tpl" required>
-        <option value="">Selecciona...</option>
-        <option value="novedad">🔥 Novedad / Lanzamiento</option>
-        <option value="oferta">💰 Oferta</option>
-        <option value="coleccion">📚 Colección</option>
-        <option value="anuncios">📢 Anuncios</option>
-      </select>
+  <main>
+    <div class="hero">
+      <h1>Generador de Contenido Premium</h1>
+      <p>Crea piezas gráficas profesionales de alta conversión y copys persuasivos con IA.</p>
+    </div>
 
-      <div class="opt" id="opt-oferta">
-        <label>💸 Precio Anterior</label>
-        <input type="text" name="anterior" placeholder="$34.990">
+    <form id="mallu-form" method="POST">
+      <div class="card">
+        <div class="form-group">
+          <label>1. Tipo de Plantilla</label>
+          <input type="hidden" name="template" id="template-type-input" value="oferta">
+          <div class="template-selector">
+            <div class="template-option selected" data-value="oferta" onclick="selectTemplate('oferta')">
+              <span class="template-icon">🏷️</span><span class="template-name">Oferta</span>
+            </div>
+            <div class="template-option" data-value="novedad" onclick="selectTemplate('novedad')">
+              <span class="template-icon">✨</span><span class="template-name">Novedad</span>
+            </div>
+            <div class="template-option" data-value="anuncio" onclick="selectTemplate('anuncio')">
+              <span class="template-icon">📢</span><span class="template-name">Anuncio</span>
+            </div>
+            <div class="template-option" data-value="coleccion" onclick="selectTemplate('coleccion')">
+              <span class="template-icon">📖</span><span class="template-name">Colección</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group" id="main-image-upload-group">
+          <label>2. Imagen Principal del Producto</label>
+          <div class="dropzone" onclick="document.getElementById('file-input').click()" id="dropzone-area">
+            <span class="dropzone-icon" id="dropzone-icon">📸</span>
+            <p class="dropzone-text" id="dropzone-text"><span>Haz clic para subir</span> o arrastra la imagen aquí</p>
+            <img id="file-preview" alt="Preview" />
+            <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFile(this.files)" onclick="event.stopPropagation()">
+          </div>
+          <input type="hidden" name="foto_url" id="foto_url_input" value="">
+        </div>
+
+        <!-- OFERTA -->
+        <div class="dynamic-section active" id="section-oferta">
+          <div class="form-group">
+            <label>Precio Anterior</label>
+            <input type="text" name="anterior" placeholder="ej: $260.000" value="$260.000">
+          </div>
+          <div class="form-group">
+            <label>Precio Oferta</label>
+            <input type="text" name="precio" placeholder="ej: $182.000" value="$182.000">
+          </div>
+        </div>
+
+        <!-- NOVEDAD -->
+        <div class="dynamic-section" id="section-novedad">
+          <div class="form-group">
+            <label>Título Central</label>
+            <input type="text" name="titulo_novedad" placeholder="ej: NOVEDADES" value="NOVEDADES">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+            <div><label>Badge 1</label><input type="text" name="badge1" placeholder="100% ORIGINAL" value="100% ORIGINAL"></div>
+            <div><label>Badge 2</label><input type="text" name="badge2" placeholder="STOCK" value="STOCK"></div>
+            <div><label>Badge 3</label><input type="text" name="badge3" placeholder="LIMITADO" value="LIMITADO"></div>
+          </div>
+        </div>
+
+        <!-- ANUNCIO -->
+        <div class="dynamic-section" id="section-anuncio">
+          <div class="form-group">
+            <label>Título Superior</label>
+            <input type="text" name="titulo_anuncio" placeholder="ej: ANUNCIOS DE LA TIENDA" value="ANUNCIOS DE LA TIENDA">
+          </div>
+          <p style="font-size:0.85rem;color:var(--muted);margin-top:8px;">Define de 1 a 3 mensajes.</p>
+          <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+            <span style="font-size:0.82rem;font-weight:600;color:var(--gold);">MENSAJE 1 (Obligatorio)</span>
+            <div class="form-group"><label style="font-size:0.8rem;">Título</label><input type="text" id="anuncio_t_1" placeholder="📦 ENVÍOS" value="📦 ENVÍOS A TODO EL PAÍS"></div>
+            <div class="form-group"><label style="font-size:0.8rem;">Descripción</label><textarea id="anuncio_d_1" rows="2" placeholder="Descripción">Envíos express diarios protegidos a todo Chile.</textarea></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+            <span style="font-size:0.82rem;font-weight:600;color:var(--gold);">MENSAJE 2 (Opcional)</span>
+            <div class="form-group"><label style="font-size:0.8rem;">Título</label><input type="text" id="anuncio_t_2" placeholder="💳 PAGOS" value="💳 MÚLTIPLES MEDIOS DE PAGO"></div>
+            <div class="form-group"><label style="font-size:0.8rem;">Descripción</label><textarea id="anuncio_d_2" rows="2" placeholder="Descripción">Paga en cuotas sin interés mediante Webpay.</textarea></div>
+          </div>
+          <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;">
+            <span style="font-size:0.82rem;font-weight:600;color:var(--gold);">MENSAJE 3 (Opcional)</span>
+            <div class="form-group"><label style="font-size:0.8rem;">Título</label><input type="text" id="anuncio_t_3" placeholder="⭐ CALIDAD" value="⭐ CALIDAD MALLU STORE"></div>
+            <div class="form-group"><label style="font-size:0.8rem;">Descripción</label><textarea id="anuncio_d_3" rows="2" placeholder="Descripción">Productos originales, garantizados y con el mejor servicio.</textarea></div>
+          </div>
+          <input type="hidden" name="anuncios_texto" id="anuncios-texto-hidden" value="">
+        </div>
+
+        <!-- COLECCIÓN -->
+        <div class="dynamic-section" id="section-coleccion">
+          <div class="form-group"><label>Título</label><input type="text" name="titulo" placeholder="COLECCIÓN" value="COLECCIÓN"></div>
+          <div class="form-group"><label>Nombre Producto</label><input type="text" name="prod_name" placeholder="Volúmenes 1-13"></div>
+          <div class="form-group"><label>Precio</label><input type="text" name="prod_precio" placeholder="$149.990" value="$149.990"></div>
+        </div>
+
+        <div class="form-group" id="copy-details-group">
+          <label>Detalles del Producto (Copy IA)</label>
+          <textarea name="copy_detalles" rows="2" placeholder="Describe características clave..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-submit" id="submit-btn">✨ Generar Contenido Premium</button>
       </div>
-
-      <div class="opt" id="opt-novedad">
-        <label>💰 Precio</label>
-        <input type="text" name="precio" placeholder="$24.990">
-      </div>
-
-      <div class="opt" id="opt-coleccion">
-        <label>🏷️ Título</label>
-        <input type="text" name="titulo" placeholder="COLECCIÓN">
-        <label>📦 Nombre Producto</label>
-        <input type="text" name="prod_name" placeholder="Volúmenes 1-13">
-        <label>💵 Precio</label>
-        <input type="text" name="prod_precio" placeholder="$149.990">
-      </div>
-
-      <div class="opt" id="opt-anuncios">
-        <label>📝 Descripción (Copy IA)</label>
-        <textarea name="copy_detalles" placeholder="Describe el producto..."></textarea>
-      </div>
-
-      <button type="submit" id="btn">✨ Generar Template</button>
     </form>
+  </main>
+
+  <footer>Mallu Collection Store &middot; <a href="https://mallucollectionstore.com" target="_blank">Tienda</a></footer>
+
+  <div class="loader-overlay" id="loader">
+    <div class="loader-spinner"></div>
+    <p class="loader-title" id="loader-title">Subiendo imágenes...</p>
+    <p class="loader-desc">Estamos renderizando tu imagen premium. Esto tomará unos segundos.</p>
   </div>
 
-  <footer>
-    Mallu Collection Store &middot; <a href="https://mallucollectionstore.com" target="_blank">Tienda</a>
-  </footer>
-</div>
+  <div class="success-overlay" id="success">
+    <div class="success-icon">✅</div>
+    <p class="success-title">¡En proceso!</p>
+    <p class="success-desc">Tu contenido se está generando y se enviará a Telegram en segundos.</p>
+    <button class="btn-again" onclick="location.reload()">🔄 Generar otro</button>
+  </div>
 
-<script>
-  const SERVER = 'https://recommendation-founded-suit-corpus.trycloudflare.com';
+  <script>
+    const SERVER = 'https://recommendation-founded-suit-corpus.trycloudflare.com';
+    const IMGBB_KEY = 'b0c49351dfc27849cb9358cb3df77528';
 
-  // Show/hide fields based on template type
-  document.getElementById('tpl').addEventListener('change', function() {
-    document.querySelectorAll('.opt').forEach(function(d) { d.classList.remove('show'); });
-    var map = { oferta:'opt-oferta', novedad:'opt-novedad', coleccion:'opt-coleccion', anuncios:'opt-anuncios' };
-    var sel = map[this.value];
-    if (sel) document.getElementById(sel).classList.add('show');
-  });
+    async function uploadToImgBB(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+          const base64 = e.target.result.split(',')[1];
+          const body = 'key=' + IMGBB_KEY + '&image=' + encodeURIComponent(base64);
+          try {
+            const resp = await fetch('https://api.imgbb.com/1/upload', {
+              method: 'POST', headers: {'Content-Type':'application/x-www-form-urlencoded'}, body
+            });
+            const data = await resp.json();
+            if (data && data.data && data.data.display_url) resolve(data.data.display_url);
+            else reject(new Error('ImgBB: ' + JSON.stringify(data)));
+          } catch(err) { reject(err); }
+        };
+        reader.onerror = () => reject(new Error('Error leyendo archivo'));
+        reader.readAsDataURL(file);
+      });
+    }
 
-  // Submit via direct form POST (no CORS needed)
-  document.getElementById('f').addEventListener('submit', function(e) {
-    e.preventDefault();
-    document.getElementById('btn').disabled = true;
-    document.getElementById('btn').textContent = '⏳ Subiendo...';
-    this.action = SERVER + '/form';
-    this.target = '_self';
-    this.submit();
-  });
-</script>
+    function selectTemplate(val) {
+      document.getElementById('template-type-input').value = val;
+      document.querySelectorAll('.template-option').forEach(el => {
+        el.classList.remove('selected');
+        if (el.getAttribute('data-value') === val) el.classList.add('selected');
+      });
+      document.querySelectorAll('.dynamic-section').forEach(el => el.classList.remove('active'));
+      document.getElementById('section-' + val).classList.add('active');
+      const mainUpload = document.getElementById('main-image-upload-group');
+      mainUpload.style.display = (val === 'anuncio') ? 'none' : 'block';
+      const copyGroup = document.getElementById('copy-details-group');
+      if (copyGroup) copyGroup.style.display = (val === 'anuncio') ? 'none' : 'block';
+    }
+
+    function handleFile(files) {
+      if (files && files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const preview = document.getElementById('file-preview');
+          preview.src = e.target.result; preview.style.display = 'block';
+          document.getElementById('dropzone-icon').style.display = 'none';
+          document.getElementById('dropzone-text').style.display = 'none';
+        };
+        reader.readAsDataURL(files[0]);
+      }
+    }
+
+    // Drag & drop
+    const dropzone = document.getElementById('dropzone-area');
+    ['dragenter','dragover'].forEach(ev => { dropzone.addEventListener(ev, e => {
+      e.preventDefault(); dropzone.style.borderColor = 'var(--gold)';
+      dropzone.style.background = 'rgba(245,166,35,0.05)';
+    })});
+    ['dragleave','drop'].forEach(ev => { dropzone.addEventListener(ev, e => {
+      e.preventDefault(); dropzone.style.borderColor = 'rgba(255,255,255,0.15)';
+      dropzone.style.background = 'rgba(255,255,255,0.01)';
+    })});
+    dropzone.addEventListener('drop', e => {
+      document.getElementById('file-input').files = e.dataTransfer.files;
+      handleFile(e.dataTransfer.files);
+    });
+
+    // Submit
+    document.getElementById('mallu-form').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const template = document.getElementById('template-type-input').value;
+      const loader = document.getElementById('loader');
+      const submitBtn = document.getElementById('submit-btn');
+
+      // Validaciones
+      if ((template === 'oferta' || template === 'novedad' || template === 'coleccion')) {
+        const f = document.getElementById('file-input');
+        if (!f.files || f.files.length === 0) {
+          alert('Por favor, sube una imagen de producto primero.');
+          return;
+        }
+      }
+
+      if (template === 'anuncio') {
+        const parts = [];
+        for (let i = 1; i <= 3; i++) {
+          const t = document.getElementById('anuncio_t_' + i).value.trim();
+          const d = document.getElementById('anuncio_d_' + i).value.trim().replace(/\\n/g,'\\\\n');
+          if (t) parts.push(t + '|' + d);
+        }
+        if (parts.length === 0) { alert('Ingresa al menos 1 mensaje.'); return; }
+        document.getElementById('anuncios-texto-hidden').value = parts.join('\\n');
+      }
+
+      // Mostrar loader y subir a ImgBB
+      loader.style.display = 'flex';
+      document.getElementById('loader-title').textContent = 'Subiendo imagen...';
+      submitBtn.disabled = true;
+
+      try {
+        const mainFile = document.getElementById('file-input');
+        if (mainFile && mainFile.files && mainFile.files[0]) {
+          const url = await uploadToImgBB(mainFile.files[0]);
+          document.getElementById('foto_url_input').value = url;
+        }
+      } catch(err) {
+        console.error('[ImgBB]', err);
+      }
+
+      document.getElementById('loader-title').textContent = 'Diseñando Post con IA...';
+
+      // Enviar a servidor
+      const formData = new FormData(this);
+      const params = new URLSearchParams();
+      for (const [key, val] of formData.entries()) params.append(key, val);
+
+      try {
+        const resp = await fetch(SERVER + '/generate-json', {
+          method: 'POST',
+          headers: {'Content-Type':'application/x-www-form-urlencoded'},
+          body: params.toString()
+        });
+        loader.style.display = 'none';
+        document.getElementById('success').classList.add('show');
+      } catch(err) {
+        loader.style.display = 'none';
+        alert('Error: ' + err.message + '. Intenta de nuevo.');
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
