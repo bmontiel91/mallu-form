@@ -24,14 +24,6 @@
     button:disabled{background:#555;cursor:not-allowed;transform:none}
     .opt{display:none;margin-top:6px;animation:fadeIn .2s}
     .opt.show{display:block}
-    .result{display:none;text-align:center;padding:20px;animation:fadeIn .3s}
-    .result.show{display:block}
-    .result .icon{font-size:48px;margin-bottom:12px}
-    .result h2{font-size:18px;color:#4CAF50;margin-bottom:8px}
-    .result p{color:#aaa;font-size:14px;margin-bottom:16px}
-    .result a{display:inline-block;background:#333;color:#fff;padding:10px 24px;border-radius:10px;text-decoration:none;font-weight:600;font-size:14px;transition:background .2s}
-    .result a:hover{background:#444}
-    .error{color:#f44336;font-size:13px;margin-top:8px;display:none}
     @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
     footer{text-align:center;margin-top:20px;font-size:11px;color:#555}
     footer a{color:#888;text-decoration:none}
@@ -39,11 +31,11 @@
 </head>
 <body>
 <div class="container">
-  <div class="card" id="formCard">
+  <div class="card">
     <h1>🎨 Mallu Templates</h1>
     <p class="sub">Selecciona tipo y sube tu foto</p>
 
-    <form id="f" enctype="multipart/form-data">
+    <form id="f" method="POST" enctype="multipart/form-data">
       <label>📸 Foto del Producto</label>
       <input type="file" name="foto" accept="image/*" required>
 
@@ -59,8 +51,6 @@
       <div class="opt" id="opt-oferta">
         <label>💸 Precio Anterior</label>
         <input type="text" name="anterior" placeholder="$34.990">
-        <label>💰 Precio Oferta</label>
-        <input type="text" name="precio" placeholder="$24.990">
       </div>
 
       <div class="opt" id="opt-novedad">
@@ -78,69 +68,39 @@
       </div>
 
       <div class="opt" id="opt-anuncios">
-        <label>📝 Descripción (para Copy IA)</label>
+        <label>📝 Descripción (Copy IA)</label>
         <textarea name="copy_detalles" placeholder="Describe el producto..."></textarea>
       </div>
 
       <button type="submit" id="btn">✨ Generar Template</button>
-      <div class="error" id="err"></div>
     </form>
   </div>
 
-  <div class="result" id="successBox">
-    <div class="icon">✅</div>
-    <h2>¡En proceso!</h2>
-    <p>Tu contenido se está generando y se enviará a Telegram en segundos.</p>
-    <a href="javascript:resetForm()">🔄 Generar otro</a>
-  </div>
-
   <footer>
-    Mallu Collection Store · <a href="https://mallucollectionstore.com" target="_blank">Tienda</a>
+    Mallu Collection Store &middot; <a href="https://mallucollectionstore.com" target="_blank">Tienda</a>
   </footer>
 </div>
 
 <script>
   const SERVER = 'https://recommendation-founded-suit-corpus.trycloudflare.com';
 
-  document.getElementById('tpl').addEventListener('change', function(){
-    document.querySelectorAll('.opt').forEach(d => d.classList.remove('show'));
-    const map = { oferta:'opt-oferta', novedad:'opt-novedad', coleccion:'opt-coleccion', anuncios:'opt-anuncios' };
-    const sel = map[this.value];
-    if(sel) document.getElementById(sel).classList.add('show');
+  // Show/hide fields based on template type
+  document.getElementById('tpl').addEventListener('change', function() {
+    document.querySelectorAll('.opt').forEach(function(d) { d.classList.remove('show'); });
+    var map = { oferta:'opt-oferta', novedad:'opt-novedad', coleccion:'opt-coleccion', anuncios:'opt-anuncios' };
+    var sel = map[this.value];
+    if (sel) document.getElementById(sel).classList.add('show');
   });
 
-  document.getElementById('f').addEventListener('submit', async function(e){
+  // Submit via direct form POST (no CORS needed)
+  document.getElementById('f').addEventListener('submit', function(e) {
     e.preventDefault();
-    const btn = document.getElementById('btn');
-    const err = document.getElementById('err');
-    btn.disabled = true;
-    btn.textContent = '⏳ Subiendo...';
-    err.style.display = 'none';
-
-    try {
-      const fd = new FormData(this);
-      const resp = await fetch(SERVER + '/form', { method:'POST', body:fd });
-      if(!resp.ok) throw new Error('Error ' + resp.status);
-      
-      document.getElementById('formCard').style.display = 'none';
-      document.getElementById('successBox').classList.add('show');
-    } catch(ex) {
-      btn.disabled = false;
-      btn.textContent = '✨ Generar Template';
-      err.textContent = 'Error: ' + ex.message + '. Intenta de nuevo.';
-      err.style.display = 'block';
-    }
+    document.getElementById('btn').disabled = true;
+    document.getElementById('btn').textContent = '⏳ Subiendo...';
+    this.action = SERVER + '/form';
+    this.target = '_self';
+    this.submit();
   });
-
-  function resetForm(){
-    document.getElementById('f').reset();
-    document.getElementById('btn').disabled = false;
-    document.getElementById('btn').textContent = '✨ Generar Template';
-    document.getElementById('err').style.display = 'none';
-    document.querySelectorAll('.opt').forEach(d => d.classList.remove('show'));
-    document.getElementById('formCard').style.display = 'block';
-    document.getElementById('successBox').classList.remove('show');
-  }
 </script>
 </body>
 </html>
