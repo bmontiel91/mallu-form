@@ -127,7 +127,7 @@
       <div class="card">
         <div class="form-group">
           <label>1. Tipo de Plantilla</label>
-          <input type="hidden" name="template" id="template-type-input" value="oferta">
+          <input type="hidden" name="Tipo de Plantilla" id="Tipo de Plantilla" value="oferta">
           <div class="template-selector">
             <div class="template-option selected" data-value="oferta" onclick="selectTemplate('oferta')">
               <span class="template-icon">🏷️</span><span class="template-name">Oferta</span>
@@ -138,7 +138,7 @@
             <div class="template-option" data-value="anuncio" onclick="selectTemplate('anuncio')">
               <span class="template-icon">📢</span><span class="template-name">Anuncio</span>
             </div>
-            <div class="template-option" data-value="coleccion" onclick="selectTemplate('coleccion')">
+            <div class="template-option" data-value="coleccion" onclick="selectTemplate('catalogo')">
               <span class="template-icon">📖</span><span class="template-name">Colección</span>
             </div>
           </div>
@@ -152,18 +152,18 @@
             <img id="file-preview" alt="Preview" />
             <input type="file" id="file-input" accept="image/*" style="display:none" onchange="handleFile(this.files)" onclick="event.stopPropagation()">
           </div>
-          <input type="hidden" name="foto_url" id="foto_url_input" value="">
+          <input type="hidden" name="foto_url_principal" id="foto_url_principal" value="">
         </div>
 
         <!-- OFERTA -->
         <div class="dynamic-section active" id="section-oferta">
           <div class="form-group">
             <label>Precio Anterior</label>
-            <input type="text" name="anterior" placeholder="ej: $260.000" value="$260.000">
+            <input type="text" name="Precio Antes (Solo Oferta)" placeholder="ej: $260.000" value="$260.000">
           </div>
           <div class="form-group">
             <label>Precio Oferta</label>
-            <input type="text" name="precio" placeholder="ej: $182.000" value="$182.000">
+            <input type="text" name="Precio Ahora (Solo Oferta)" placeholder="ej: $182.000" value="$182.000">
           </div>
         </div>
 
@@ -171,12 +171,12 @@
         <div class="dynamic-section" id="section-novedad">
           <div class="form-group">
             <label>Título Central</label>
-            <input type="text" name="titulo_novedad" placeholder="ej: NOVEDADES" value="NOVEDADES">
+            <input type="text" name="Titulo Central (Solo Novedad)" placeholder="ej: NOVEDADES" value="NOVEDADES">
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-            <div><label>Badge 1</label><input type="text" name="badge1" placeholder="100% ORIGINAL" value="100% ORIGINAL"></div>
-            <div><label>Badge 2</label><input type="text" name="badge2" placeholder="STOCK" value="STOCK"></div>
-            <div><label>Badge 3</label><input type="text" name="badge3" placeholder="LIMITADO" value="LIMITADO"></div>
+            <div><label>Badge 1</label><input type="text" name="Badge 1 (Solo Novedad)" placeholder="100% ORIGINAL" value="100% ORIGINAL"></div>
+            <div><label>Badge 2</label><input type="text" name="Badge 2 (Solo Novedad)" placeholder="STOCK" value="STOCK"></div>
+            <div><label>Badge 3</label><input type="text" name="Badge 3 (Solo Novedad)" placeholder="LIMITADO" value="LIMITADO"></div>
           </div>
         </div>
 
@@ -184,7 +184,7 @@
         <div class="dynamic-section" id="section-anuncio">
           <div class="form-group">
             <label>Título Superior</label>
-            <input type="text" name="titulo_anuncio" placeholder="ej: ANUNCIOS DE LA TIENDA" value="ANUNCIOS DE LA TIENDA">
+            <input type="text" name="Titulo Superior (Solo Anuncio)" placeholder="ej: ANUNCIOS DE LA TIENDA" value="ANUNCIOS DE LA TIENDA">
           </div>
           <p style="font-size:0.85rem;color:var(--muted);margin-top:8px;">Define de 1 a 3 mensajes.</p>
           <div style="background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;">
@@ -202,19 +202,19 @@
             <div class="form-group"><label style="font-size:0.8rem;">Título</label><input type="text" id="anuncio_t_3" placeholder="⭐ CALIDAD" value="⭐ CALIDAD MALLU STORE"></div>
             <div class="form-group"><label style="font-size:0.8rem;">Descripción</label><textarea id="anuncio_d_3" rows="2" placeholder="Descripción">Productos originales, garantizados y con el mejor servicio.</textarea></div>
           </div>
-          <input type="hidden" name="anuncios_texto" id="anuncios-texto-hidden" value="">
+          <input type="hidden" name="Items de Anuncio (Solo Anuncio) - Uno por linea. Formato: TITULO|DESCRIPCION" id="Items-de-Anuncio" value="">
         </div>
 
         <!-- COLECCIÓN -->
-        <div class="dynamic-section" id="section-coleccion">
-          <div class="form-group"><label>Título</label><input type="text" name="titulo" placeholder="COLECCIÓN" value="COLECCIÓN"></div>
-          <div class="form-group"><label>Nombre Producto</label><input type="text" name="prod_name" placeholder="Volúmenes 1-13"></div>
-          <div class="form-group"><label>Precio</label><input type="text" name="prod_precio" placeholder="$149.990" value="$149.990"></div>
+        <div class="dynamic-section" id="section-catalogo">
+          <div class="form-group"><label>Título</label><input type="text" name="Titulo Superior (Solo Catalogo)" placeholder="COLECCIÓN" value="COLECCIÓN"></div>
+          <div class="form-group"><label>Nombre Producto</label><input type="text" name="Items de Catalogo (Solo Catalogo) - Uno por linea. Formato: TITULO|PRECIO" placeholder="Volúmenes 1-13"></div>
+          <div class="form-group"><label>Precio</label><input type="text" name="Precio Ahora (Solo Oferta)" placeholder="$149.990" value="$149.990"></div>
         </div>
 
         <div class="form-group" id="copy-details-group">
           <label>Detalles del Producto (Copy IA)</label>
-          <textarea name="copy_detalles" rows="2" placeholder="Describe características clave..."></textarea>
+          <textarea name="Detalles del Producto (Para redactar el Copy de Redes)" rows="2" placeholder="Describe características clave..."></textarea>
         </div>
 
         <button type="submit" class="btn-submit" id="submit-btn">✨ Generar Contenido Premium</button>
@@ -262,7 +262,7 @@
     }
 
     function selectTemplate(val) {
-      document.getElementById('template-type-input').value = val;
+      document.getElementById('Tipo de Plantilla').value = val;
       document.querySelectorAll('.template-option').forEach(el => {
         el.classList.remove('selected');
         if (el.getAttribute('data-value') === val) el.classList.add('selected');
@@ -306,12 +306,12 @@
     // Submit
     document.getElementById('mallu-form').addEventListener('submit', async function(e) {
       e.preventDefault();
-      const template = document.getElementById('template-type-input').value;
+      const template = document.getElementById('Tipo de Plantilla').value;
       const loader = document.getElementById('loader');
       const submitBtn = document.getElementById('submit-btn');
 
       // Validaciones
-      if ((template === 'oferta' || template === 'novedad' || template === 'coleccion')) {
+      if ((template === 'oferta' || template === 'novedad' || template === 'catalogo')) {
         const f = document.getElementById('file-input');
         if (!f.files || f.files.length === 0) {
           alert('Por favor, sube una imagen de producto primero.');
@@ -327,7 +327,7 @@
           if (t) parts.push(t + '|' + d);
         }
         if (parts.length === 0) { alert('Ingresa al menos 1 mensaje.'); return; }
-        document.getElementById('anuncios-texto-hidden').value = parts.join('\\n');
+        document.getElementById('Items-de-Anuncio').value = parts.join('\\n');
       }
 
       // Mostrar loader y subir a ImgBB
@@ -339,7 +339,7 @@
         const mainFile = document.getElementById('file-input');
         if (mainFile && mainFile.files && mainFile.files[0]) {
           const url = await uploadToImgBB(mainFile.files[0]);
-          document.getElementById('foto_url_input').value = url;
+          document.getElementById('foto_url_principal').value = url;
         }
       } catch(err) {
         console.error('[ImgBB]', err);
